@@ -1,13 +1,22 @@
 ---
 # tasks file for k8s
 - debug: var=ansible_distribution
-- name: Enable a RHSM repository
+- name: Enable a RHSM repository on Redhat
   rhsm_repository: 
     name: rhel-7-server-extras-rpms
   when: ansible_distribution == 'RedHat'
   ignore_errors: true
 
-- name: Add kubernetes repository
+- name: Install basic packages on Ubuntu 
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - "{{ base_packages }}"
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Add kubernetes repository on Redhat
   yum_repository:
     name: Kubernetes
     description: Adding Kubernetes repositories
@@ -16,18 +25,32 @@
     enabled: true
     gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
     repo_gpgcheck: yes
+  when: ansible_distribution == 'RedHat'
 
-- name: Disable Firewall if running
+- name: Adding gpg key on Ubuntu
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Adding K8 repository on Ubuntu
+  apt_repository:
+    repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+    state: present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Disable Firewall if running on Redhat
   service:
     name: firewalld
     state: stopped
     enabled: false
-  when: ansible_os_family == 'RedHat'
+  when: ansible_distribution == 'RedHat'
   ignore_errors: true
 
-- name: Disable SELinux
+- name: Disable SELinux on Redhat
   selinux:
     state: disabled
+  when: ansible_distribution == 'RedHat'
 
 - name: update kernel settings
   sysctl:
@@ -68,8 +91,8 @@
 
 - name: start service
   service: 
-    name: "{{item}}"
+    name: "{{ item }}"
     state: started
     enabled: yes
   with_items:
-  - "{{services}}"
+  - "{{ services }}"
