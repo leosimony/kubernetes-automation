@@ -1,0 +1,13 @@
+- name: Assign variable
+  debug:
+    var: ansible_distribution
+
+- name: Install basic packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - "{{ base_packages }}"
+
+- name: 
