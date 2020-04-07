@@ -1,10 +1,15 @@
 ---
 # vars file for k8s
-necessary_packages:
+necessary_packages_rhel:
 - kubelet
 - kubeadm
 - kubectl
 - docker
+necessary_packages_ubuntu:
+- kubelet
+- kubeadm
+- kubectl
+- docker.io
 services:
 - kubelet
 - docker

@@ -60,14 +60,33 @@
     state: present
     reload: yes
   ignore_errors: true
+
+- name: Update kernel settings Ubuntu
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
+    systctl_file: /etc/sysctl.d/k8s.conf
+    reload: yes
+  ignore_errors: true
+  when: ansible_distribution == 'RedHat'
   
-- name: Install docker, kubeadm, and kubectl
+- name: Install docker, kubeadm, and kubectl on Redhat
   package:
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
   loop:
-  - "{{necessary_packages}}"
+  - "{{ necessary_packages_rhel }}"
   notify: start service
+  when: ansible_distribution == 'RedHat
+
+- name: Install docker, kubeadm, and kubectl on Ubuntu
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+  - "{{ necessary_packages_ubuntu }}"
+  notify: start service
+  when: ansible_distribution == 'Ubuntu'
 
 - name: Remove any host file and re-add them.
   file:

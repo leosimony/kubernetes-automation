@@ -18,10 +18,14 @@ all:
     base_packages:
       apt-transport-https:
       curl:
-    necessary_packages:
+    necessary_packages_rhel:
       kubeadm:
       kubectl: 
       docker:
+    necessary_packages_ubuntu:
+      kubeadm:
+      kubectl:
+      docker.io:
     #ports:
     #- 6443
     #- 2379
