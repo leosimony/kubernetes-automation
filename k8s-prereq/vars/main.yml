@@ -8,3 +8,6 @@ necessary_packages:
 services:
 - kubelet
 - docker
+base_packages:
+- apt-transport-https
+- curl
