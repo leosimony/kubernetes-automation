@@ -4,13 +4,13 @@ all:
     masters:
         hosts:
           kube-master-1:
-            ansible_host: 192.168.0.109 #169.62.187.250
+            ansible_host: 192.168.0.101 #169.62.187.250
     workers:
         hosts:
           kube-worker-1:
-            ansible_host: 192.168.0.110 #52.116.46.72
-          kube-worker-2:
-            ansible_host: 192.168.0.111 #52.116.46.78
+            ansible_host: 192.168.0.102 #52.116.46.72
+          #kube-worker-2:
+            #ansible_host: 192.168.0.111 #52.116.46.78
   vars:
     ansible_ssh_user: vagrant
     ansible_become_user: root
